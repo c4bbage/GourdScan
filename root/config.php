@@ -1,7 +1,7 @@
 <?php
 include("conn.php");
 if(@$_GET['hash']){
-$_SESSION['hash']=$_GET['hash'];
+$_SESSION['hash']=mysql_real_escape_string($_GET['hash']);
 }
 $hash=@$_SESSION['hash'];
 

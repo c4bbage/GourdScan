@@ -1,11 +1,12 @@
 #codeing=utf-8
 from time import sleep
 import urllib2
+webserver = "http://localhost:88"
 def update():
-    url="http://localhost:88/api.php?type=sqlmap_update"
+    url=webserver + "/api.php?type=sqlmap_update"
     urllib2.urlopen(url).read()
 def api_get():
-    url="http://localhost:88/api.php?type=api_get"
+    url=webserver + "/api.php?type=api_get"
     data=urllib2.urlopen(url).read()
 count=1
 while True:
