@@ -30,25 +30,25 @@ include("conn.php");
 
                     $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and userhash='{$hash}'");
                     $count = '';
-                    while ($row = mysqli_fetch_array($conn,$query)) {
+                    while ($row = mysqli_fetch_array($query)) {
                         $count = $row['row'];
 
                     }
                     $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and status='running' and userhash='{$hash}'");
                     $rcount = '';
-                    while ($row = mysqli_fetch_array($conn,$query)) {
+                    while ($row = mysqli_fetch_array($query)) {
                         $rcount = $row['row'];
 
                     }
                     $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and status='terminated' and userhash='{$hash}'");
                     $tcount = '';
-                    while ($row = mysqli_fetch_array($conn,$query)) {
+                    while ($row = mysqli_fetch_array($query)) {
                         $tcount = $row['row'];
 
                     }
                     $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and status='Inject' and userhash='{$hash}'");
                     $icount = '';
-                    while ($row = mysqli_fetch_array($conn,$query)) {
+                    while ($row = mysqli_fetch_array($query)) {
                         $icount = $row['row'];
 
                     }
@@ -196,7 +196,7 @@ include("conn.php");
                     $search = "and url like '%{$_POST['search']}%'";
                 }
                 $query = mysqli_query($conn,"select * from sqlmap where hash!='' {$search} and userhash='{$hash}' order by pr desc");
-                while ($row = mysqli_fetch_array($conn,$query)) {
+                while ($row = mysqli_fetch_array($query)) {
                     if ($row['status'] == 'running') {
                         $class = 'active';
                     } else {
@@ -256,7 +256,7 @@ include("conn.php");
 
                             /*
                             $dircount=mysqli_query($conn,"select count(*) as count from dirscan where url like '%{$host}%' and userhash='{$hash}' ");
-                            while($dirrow=mysqli_fetch_array($conn,$dircount)){
+                            while($dirrow=mysqli_fetch_array($dircount)){
                                 $dircounts=$dirrow['count'];
                             }
                             */

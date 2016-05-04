@@ -344,7 +344,7 @@ if (@$_POST['action'] == 'add') {
 
 
                 <?php
-                $apiserver = mysqli_query("select * from apiconfig");
+                $apiserver = mysqli_query($conn,"select * from apiconfig");
                 while($row=mysqli_fetch_array($apiserver)){
                 ?>
                         <form action="" method='POST'>
@@ -429,7 +429,7 @@ if (@$_POST['action'] == 'add') {
                 <tbody>
 
                 <?php
-                $apiserver = mysqli_query("select * from config");
+                $apiserver = mysqli_query($conn,"select * from config");
                 while ($row = mysqli_fetch_array($apiserver)) {
                     ?>
                     <form action="" method='POST'>
