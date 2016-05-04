@@ -199,7 +199,6 @@ include("conn.php");
                 if(isset($_GET['status']) && in_array($_GET['status'],array('terminated','Inject','running'))){
                     $search ="{$search} and status='{$_GET['status']}'";
                 }
-                echo("select * from sqlmap where hash!='' {$search} and userhash='{$hash}' order by pr desc");
                 $query = mysqli_query($conn,"select * from sqlmap where hash!='' {$search} and userhash='{$hash}' order by pr desc");
                 while ($row = mysqli_fetch_array($query)) {
                     if ($row['status'] == 'running') {
