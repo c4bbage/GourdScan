@@ -1,9 +1,9 @@
 <?php
-$conn=mysql_connect("127.0.0.1:3307",'root','usbw');
-mysql_select_db("pscan",$conn);
+$conn = mysqli_connect("127.0.0.1:3307", 'root', 'usbw');
+mysqli_select_db("pscan", $conn);
 session_start();
-if(@$_GET['hash']){
-$_SESSION['hash']=mysql_real_escape_string($_GET['hash']);
+if (@$_GET['hash']) {
+    $_SESSION['hash'] = mysqli_real_escape_string($_GET['hash']);
 }
-$hash=@$_SESSION['hash'];
+$hash = @$_SESSION['hash'];
 ?>
