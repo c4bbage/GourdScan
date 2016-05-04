@@ -72,15 +72,15 @@ include("conn.php");
                                 </li>
 
                                 <li>
-                                    <a class="navbar-brand" href="#">Running:<?php echo $rcount ?></a>
+                                    <a class="navbar-brand" href="index.php?status=running">Running:<?php echo $rcount ?></a>
                                 </li>
 
                                 <li>
-                                    <a class="navbar-brand" href="#">Terminated:<?php echo $tcount ?></a>
+                                    <a class="navbar-brand" href="index.php?status=terminated">Terminated:<?php echo $tcount ?></a>
                                 </li>
 
                                 <li>
-                                    <a class="navbar-brand" href="#">Inject:<?php echo $icount ?></a>
+                                    <a class="navbar-brand" href="index.php?status=Inject">Inject:<?php echo $icount ?></a>
                                 </li>
 
                             </ul>
@@ -195,6 +195,10 @@ include("conn.php");
                 if (isset($_POST['search'])) {
                     $search = "and url like '%{$_POST['search']}%'";
                 }
+                $status="";
+                if(isset($_GET['status']) && in_array($_GET['status'],array('terminated','Inject','running'))){
+                    $search ="{$search} and status='{$_GET['status']}'' ";
+                }
                 $query = mysqli_query($conn,"select * from sqlmap where hash!='' {$search} and userhash='{$hash}' order by pr desc");
                 while ($row = mysqli_fetch_array($query)) {
                     if ($row['status'] == 'running') {
@@ -222,8 +226,6 @@ include("conn.php");
                     foreach ($match[1] as $m) {
                         $m = stripcslashes($m);
                         $data .= $m . "\n";
-
-
                     }
 
                     if (@$_GET['vul'] == 1 and $stat != 'Inject') {
@@ -243,17 +245,12 @@ include("conn.php");
                                 <?php echo substr($url, 0, 60) ?>..
                             </td>
                             <td>
-
                                 <?php echo $stat; ?>
-
                             </td>
                             <td>
-
                                 <?php echo $node; ?>
-
                             </td>
                             <?php
-
                             /*
                             $dircount=mysqli_query($conn,"select count(*) as count from dirscan where url like '%{$host}%' and userhash='{$hash}' ");
                             while($dirrow=mysqli_fetch_array($dircount)){

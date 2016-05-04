@@ -2,7 +2,7 @@
 include("conn.php");
 if (@$_GET['type'] == 'config') {
     $sql = "select * from config ";
-    $data = mysqli_query($sql);
+    $data = mysqli_query($conn,$sql);
     while ($row = mysqli_fetch_array($data)) {
         $p = "<{$row['key']}>{$row['value']}</{$row['key']}>\n";
         echo $p;
