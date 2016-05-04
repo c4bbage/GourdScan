@@ -90,7 +90,7 @@ if (@$_POST['action'] == 'add') {
                     <?php
 
 
-                    $query = mysqli_query("select count(*) as row from sqlmap where hash!='' and userhash='{$hash}'");
+                    $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and userhash='{$hash}'");
                     $count = '';
                     while ($row = mysqli_fetch_array($query)) {
                         $count = $row['row'];
@@ -110,7 +110,7 @@ if (@$_POST['action'] == 'add') {
                     }
                     $query = mysqli_query($conn,"select count(*) as row from sqlmap where hash!='' and status='Inject' and userhash='{$hash}'");
                     $icount = '';
-                    while ($row = mysqli_fetch_array($conn,$query)) {
+                    while ($row = mysqli_fetch_array($query)) {
                         $icount = $row['row'];
 
                     }
@@ -297,7 +297,7 @@ if (@$_POST['action'] == 'add') {
                                   (select count(*) from sqlmap where userhash='{$user['userhash']}' and status='not running') as notrunning,
                                   (select count(*) from sqlmap where userhash='{$user['userhash']}' and status='Inject') as inject,
                                   (select count(*) from sqlmap where userhash='{$user['userhash']}' and status='terminated') as `terminated`");
-                $row = mysqli_fetch_array($conn,$rows); ?>
+                $row = mysqli_fetch_array($rows); ?>
 
 
                 <tr class='warning'>
