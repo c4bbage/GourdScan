@@ -26,12 +26,12 @@ if (@$_GET['type'] == 'sqlmap') {
 	values('{$key}','{$request}','{$url}','{$stat->status}','{$userhash}','{$apiserver}')
 	";
     echo $sql;
-    mysqli_query($sql);
+    mysqli_query($conn,$sql);
     exit();
 }
 if ($_GET['type'] == 'sqlmap_update') {
     header("Location: index.php");
-    $data = mysqli_query("select * from sqlmap where status not in ('terminated','Inject')");
+    $data = mysqli_query($conn,"select * from sqlmap where status not in ('terminated','Inject')");
     while ($row = mysqli_fetch_array($data)) {
         $key = $row['key'];
         $stat = file_get_contents("{$row['apiserver']}/scan/{$key}/status");
@@ -43,9 +43,7 @@ if ($_GET['type'] == 'sqlmap_update') {
         foreach ($log as $l) {
             foreach ($l as $ll) {
                 $log_array[] = $ll->message . "\n";
-
             }
-
         }
         $dbtype = explode("the back-end DBMS is ", $log_array[count($log_array) - 1]);
         if (isset($dbtype[1])) {
@@ -55,12 +53,9 @@ if ($_GET['type'] == 'sqlmap_update') {
             $dbtype = 'UnKnow';
             // update dbtype
         }
-
         $log_array = var_export($log_array, true);
         $log_array = addslashes($log_array);
-
-
-        mysqli_query("update sqlmap set data='{$log_array}',status='{$stat}',dbtype='{$dbtype}' where `key`='{$key}'");
+        mysqli_query($conn,"update sqlmap set data='{$log_array}',status='{$stat}',dbtype='{$dbtype}' where `key`='{$key}'");
 
     }
 
@@ -68,18 +63,18 @@ if ($_GET['type'] == 'sqlmap_update') {
 }
 if ($_GET['type'] == 'sqlmap_clear') {
     header("Location: index.php");
-    mysqli_query("delete from sqlmap where status not in ('running','Inject')  and userhash='{$hash}'");
+    mysqli_query($conn,"delete from sqlmap where status not in ('running','Inject')  and userhash='{$hash}'");
     exit();
 }
 if ($_GET['type'] == 'sqlmap_clearall') {
     header("Location: index.php");
-    mysqli_query("delete from sqlmap  where status not in ('Inject')  and userhash='{$hash}';");
+    mysqli_query($conn,"delete from sqlmap  where status not in ('Inject')  and userhash='{$hash}';");
     exit();
 }
 if ($_GET['type'] == 'sqlmap_clearvuls') {
     header("Location: index.php");
-    mysqli_query("delete from sqlmap  where status  in ('Inject')  and userhash='{$hash}';");
-    mysqli_query("delete from dirscan ;");
+    mysqli_query($conn,"delete from sqlmap  where status  in ('Inject')  and userhash='{$hash}';");
+    mysqli_query($conn,"delete from dirscan ;");
     exit();
 }
 if ($_GET['type'] == 'hash') {
@@ -87,13 +82,13 @@ if ($_GET['type'] == 'hash') {
     $hash = addslashes($_GET['hash']);
     $sql = "update sqlmap set `hash`='{$hash}' where `key`='{$key}'";
     echo $sql;
-    mysqli_query($sql);
+    mysqli_query($conn,$sql);
 
 
 }
 if ($_GET['type'] == 'hash_test') {
     $hash = addslashes($_GET['hash']);
-    $sql = mysqli_query("select `key` from sqlmap where hash='{$hash}'", $conn);
+    $sql = mysqli_query($conn,"select `key` from sqlmap where hash='{$hash}'", $conn);
     $data = mysqli_fetch_array($sql);
     //var_dump($data);
     if ($data['key'] != '') {
@@ -110,20 +105,20 @@ if ($_GET['type'] == 'dirscan_add') {
     $code = intval($_GET['code']);
     $url = addslashes(base64_decode($_GET['url']));
     $sql = "insert into dirscan(url,code) values('{$url}','{$code}')";
-    mysqli_query($sql);
+    mysqli_query($conn,$sql);
     exit();
 }
 if ($_GET['type'] == 'dirscan') {
     ignore_user_abort();
     set_time_limit(0);
-    $urls = mysqli_query("select url from sqlmap where status='inject' and dirscan=0");
+    $urls = mysqli_query($conn,"select url from sqlmap where status='inject' and dirscan=0");
     $host = array();
     $write = '';
     while ($row = mysqli_fetch_array($urls)) {
         $h = parse_url($row['url']);
         $host[] = $h['host'];
-        $isscan = mysqli_query("select count(*) as count from dirscan where url like '%{$h['host']}%'");
-        mysqli_query("update sqlmap set dirscan=1 where url='{$row['url']}'");
+        $isscan = mysqli_query($conn,"select count(*) as count from dirscan where url like '%{$h['host']}%'");
+        mysqli_query($conn,"update sqlmap set dirscan=1 where url='{$row['url']}'");
         $write .= $row['url'] . "\n";
         /*
         while($rows=mysqli_fetch_array($isscan)){
@@ -144,7 +139,7 @@ if ($_GET['type'] == 'dirscan') {
 }
 if ($_GET['type'] == 'getapi') {
 
-    $row = mysqli_query("select DISTINCT ip as api,(select count(*) from sqlmap where apiserver=api and  status not in ('terminated','Inject') ) as count from apiconfig order by count limit 1");
+    $row = mysqli_query($conn,"select DISTINCT ip as api,(select count(*) from sqlmap where apiserver=api and  status not in ('terminated','Inject') ) as count from apiconfig order by count limit 1");
     $row = mysqli_fetch_array($row);
 
     die($row['api']);
